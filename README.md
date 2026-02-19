@@ -20,6 +20,14 @@ Invoice and document management dashboard with Next.js + Microsoft SharePoint in
 
 ---
 
+## Demo
+
+[![Watch the demo](https://img.youtube.com/vi/KbM5PdSj0_Q/maxresdefault.jpg)](https://youtu.be/KbM5PdSj0_Q)
+
+*Click to watch on YouTube*
+
+---
+
 ## Features
 
 | Feature | Description |
