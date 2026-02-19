@@ -9,86 +9,86 @@
 [![Radix UI](https://img.shields.io/badge/Radix%20UI-Themes-161618)](https://www.radix-ui.com/themes)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Next.js + Microsoft SharePoint entegrasyonu ile fatura ve belge yönetim dashboard'u.
+Invoice and document management dashboard with Next.js + Microsoft SharePoint integration.
 
-[Kurulum](#-kurulum) •
-[Özellikler](#-özellikler) •
-[Kullanım](#-kullanım) •
+[Setup](#-setup) •
+[Features](#-features) •
+[Usage](#-usage) •
 [Deploy](#-deploy)
 
 </div>
 
 ---
 
-## Özellikler
+## Features
 
-| Özellik | Açıklama |
-|--------|----------|
-| **Microsoft ile giriş** | Azure AD SSO, otomatik token yenileme |
-| **SharePoint listeleri** | Belgeler, Faturalar listelerinden veri çekme |
-| **Tip güvenli CRUD** | CLI ile otomatik üretilen TypeScript tipleri |
-| **Radix UI** | Modern, erişilebilir komponentler |
+| Feature | Description |
+|---------|-------------|
+| **Microsoft login** | Azure AD SSO, automatic token refresh |
+| **SharePoint lists** | Data from Documents, Invoices lists |
+| **Type-safe CRUD** | TypeScript types auto-generated via CLI |
+| **Radix UI** | Modern, accessible components |
 
 ---
 
-## Kurulum
+## Setup
 
-### 1. Bağımlılıkları yükle
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Ortam değişkenlerini ayarla
+### 2. Configure environment variables
 
 ```bash
 cp .env.example .env.local
 ```
 
-`.env.local` dosyasını doldur:
+Fill in `.env.local`:
 
-| Değişken | Açıklama |
-|----------|----------|
+| Variable | Description |
+|----------|-------------|
 | `NEXT_PUBLIC_SHAREPOINT_TENANT_ID` | Azure AD Tenant ID |
 | `NEXT_PUBLIC_SHAREPOINT_CLIENT_ID` | Azure AD App Client ID |
-| `NEXT_PUBLIC_SHAREPOINT_REDIRECT_URI` | Redirect URI (örn. `http://localhost:3000`) |
-| `SHAREPOINT_CLIENT_SECRET` | sp-generate-types CLI için (opsiyonel, sadece local) |
+| `NEXT_PUBLIC_SHAREPOINT_REDIRECT_URI` | Redirect URI (e.g. `http://localhost:3000`) |
+| `SHAREPOINT_CLIENT_SECRET` | For sp-generate-types CLI (optional, local only) |
 
-### 3. Tipleri oluştur (opsiyonel)
+### 3. Generate types (optional)
 
-SharePoint content type'larından TypeScript interface'leri üretir:
+Generate TypeScript interfaces from SharePoint content types:
 
 ```bash
 npx sp-generate-types -c sharepoint.config.ts --non-interactive
 ```
 
-### 4. Geliştirme sunucusunu başlat
+### 4. Start the dev server
 
 ```bash
 npm run dev
 ```
 
-Tarayıcıda [http://localhost:3000](http://localhost:3000) açın.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
 ## @mustafaaksoy41/sharepoint-kit
 
-Bu proje **[sharepoint-kit](https://github.com/messivite/sharepoint-kit)** paketini kullanıyor. Microsoft Graph API, React hook'ları, Radix UI bileşenleri ve CLI tip üreteci sunar.
+This project uses the **[sharepoint-kit](https://github.com/messivite/sharepoint-kit)** package. It provides Microsoft Graph API client, React hooks, Radix UI components, and a CLI type generator.
 
-### Paket modülleri
+### Package modules
 
-| Modül | İçerik |
-|-------|--------|
+| Module | Contents |
+|--------|----------|
 | `@mustafaaksoy41/sharepoint-kit` | `createSpClient` – Graph API client |
-| `@mustafaaksoy41/sharepoint-kit/components` | `SpAuthProvider`, `SpProviderWithAuth`, `SpListTable` vb. |
-| `@mustafaaksoy41/sharepoint-kit/hooks` | `useSpList`, `useSpItem`, `useSpCreate` vb. |
+| `@mustafaaksoy41/sharepoint-kit/components` | `SpAuthProvider`, `SpProviderWithAuth`, `SpListTable`, etc. |
+| `@mustafaaksoy41/sharepoint-kit/hooks` | `useSpList`, `useSpItem`, `useSpCreate`, etc. |
 
 ---
 
-## Kullanım
+## Usage
 
-### Auth ve Provider
+### Auth and Provider
 
 ```tsx
 import { SpAuthProvider, SpProviderWithAuth } from "@mustafaaksoy41/sharepoint-kit/components";
@@ -103,7 +103,7 @@ import { Theme } from "@radix-ui/themes";
 </Theme>
 ```
 
-### Hook'lar
+### Hooks
 
 #### `useSpContext` – Graph API client
 
@@ -120,7 +120,7 @@ function MyComponent() {
 }
 ```
 
-#### `useSpAuth` – Token ve giriş durumu
+#### `useSpAuth` – Token and auth state
 
 ```tsx
 import { useSpAuth } from "@mustafaaksoy41/sharepoint-kit/components";
@@ -129,13 +129,13 @@ function Header() {
   const { token, isAuthenticated, user, login, logout } = useSpAuth();
 
   if (!isAuthenticated) {
-    return <button onClick={login}>Microsoft ile giriş</button>;
+    return <button onClick={login}>Sign in with Microsoft</button>;
   }
   return <span>{user?.name}</span>;
 }
 ```
 
-#### `useSpList` – Liste verisi (SWR)
+#### `useSpList` – List data (SWR)
 
 ```tsx
 import { useSpList } from "@mustafaaksoy41/sharepoint-kit/hooks";
@@ -144,11 +144,11 @@ import type { Invoice } from "../generated/sp-types";
 function InvoiceList() {
   const { data, isLoading, error, mutate } = useSpList<Invoice>({
     listId: "50fc630f-...",
-    contentTypeName: "Fatura Denemesi",
+    contentTypeName: "Invoice",
   });
 
   if (isLoading) return <Spinner />;
-  if (error) return <p>Hata: {error.message}</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <ul>
@@ -160,9 +160,9 @@ function InvoiceList() {
 }
 ```
 
-### Komponentler
+### Components
 
-#### `SpListTable` – Tablo görünümü
+#### `SpListTable` – Table view
 
 ```tsx
 import { SpListTable } from "@mustafaaksoy41/sharepoint-kit/components";
@@ -170,43 +170,43 @@ import type { Invoice } from "../generated/sp-types";
 
 <SpListTable<Invoice>
   listId={listId}
-  contentTypeName="Fatura Denemesi"
+  contentTypeName="Invoice"
   columns={[
-    { key: "Title", label: "Başlık" },
-    { key: "Tutar", label: "Tutar", format: "currency" },
-    { key: "Created", label: "Tarih", format: "date" },
+    { key: "Title", label: "Title" },
+    { key: "Tutar", label: "Amount", format: "currency" },
+    { key: "Created", label: "Date", format: "date" },
   ]}
-  emptyMessage="Kayıt bulunamadı."
+  emptyMessage="No records found."
 />
 ```
 
-#### `SpItemForm` – Form ile ekleme/düzenleme
+#### `SpItemForm` – Add/edit form
 
 ```tsx
 import { SpItemForm } from "@mustafaaksoy41/sharepoint-kit/components";
 
 <SpItemForm<Invoice>
   listId={listId}
-  fields={["Title", "Tutar", "faturaNo"]}
+  fields={["Title", "Tutar", "invoiceNo"]}
   onSubmit={() => mutate()}
 />
 ```
 
 ---
 
-## Proje yapısı
+## Project structure
 
 ```
 ├── app/
 │   ├── (dashboard)/
-│   │   └── listeler/faturalar/   # Fatura listesi sayfası
+│   │   └── listeler/faturalar/   # Invoice list page
 │   ├── components/               # Header, TokenRefreshProvider
 │   ├── hooks/                    # useSiteInfo, useLists
 │   └── providers.tsx             # SpAuth + Theme
 ├── generated/
-│   └── sp-types.ts               # CLI ile üretilen Invoice vb.
-├── sharepoint.config.ts          # Tip üretimi config (tenant/client env'den)
-└── .env.local                    # Secret'lar (gitignore)
+│   └── sp-types.ts               # CLI-generated types (Invoice, etc.)
+├── sharepoint.config.ts          # Type generation config (reads from env)
+└── .env.local                    # Secrets (gitignored)
 ```
 
 ---
@@ -215,13 +215,13 @@ import { SpItemForm } from "@mustafaaksoy41/sharepoint-kit/components";
 
 ### Vercel
 
-1. Repo'yu Vercel'e bağla
-2. **Environment Variables** ekle:
+1. Connect the repo to Vercel
+2. Add **Environment Variables**:
    - `NEXT_PUBLIC_SHAREPOINT_TENANT_ID`
    - `NEXT_PUBLIC_SHAREPOINT_CLIENT_ID`
    - `NEXT_PUBLIC_SHAREPOINT_REDIRECT_URI` → `https://your-domain.vercel.app`
 
-3. Deploy et
+3. Deploy
 
 ### Release
 
@@ -230,10 +230,10 @@ npm version patch    # 0.1.0 → 0.1.1
 git push --follow-tags
 ```
 
-Tag push edildiğinde GitHub Release otomatik oluşturulur.
+Pushing a tag triggers an automatic GitHub Release.
 
 ---
 
-## Lisans
+## License
 
 MIT
