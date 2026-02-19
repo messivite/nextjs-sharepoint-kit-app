@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Setup
+
+1. Copy `.env.example` to `.env.local`
+2. Azure AD App Registration'dan değerleri doldur (tenant ID, client ID, redirect URI)
+3. sp-generate-types için `SHAREPOINT_CLIENT_SECRET` ekle (sadece local, repo'ya eklenmez)
+
 ## Getting Started
 
 First, run the development server:

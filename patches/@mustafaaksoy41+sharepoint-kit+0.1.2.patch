@@ -1,0 +1,44 @@
+diff --git a/node_modules/@mustafaaksoy41/sharepoint-kit/dist/bin/sp-generate-types.js b/node_modules/@mustafaaksoy41/sharepoint-kit/dist/bin/sp-generate-types.js
+index 6b2dfa6..17b6c03 100755
+--- a/node_modules/@mustafaaksoy41/sharepoint-kit/dist/bin/sp-generate-types.js
++++ b/node_modules/@mustafaaksoy41/sharepoint-kit/dist/bin/sp-generate-types.js
+@@ -1,6 +1,4 @@
+ #!/usr/bin/env node
+-#!/usr/bin/env node
+-
+ // bin/sp-generate-types.ts
+ import { Command } from "commander";
+ 
+@@ -376,9 +374,14 @@ async function generateTypeScript(inputs, graphClient, options = {}) {
+     const contentType = contentTypes.find((ct) => ct.name === input.contentTypeName);
+     let columns;
+     if (contentType) {
+-      columns = await graphClient.getColumns({ contentTypeId: contentType.id });
++      try {
++        columns = await graphClient.getColumns({ contentTypeId: contentType.id, listId: input.listId });
++      } catch (err) {
++        console.log(`    Content type columns API failed, falling back to list columns`);
++        columns = await graphClient.getListColumns({ listId: input.listId });
++      }
+     } else {
+-      console.log(`    Content type not found by ID, falling back to list columns`);
++      console.log(`    Content type not found, falling back to list columns`);
+       columns = await graphClient.getListColumns({ listId: input.listId });
+     }
+     const writableColumns = columns.filter((col) => !col.readOnly && !isSystemColumn(col.name));
+diff --git a/node_modules/@mustafaaksoy41/sharepoint-kit/dist/chunk-VOGWZXJY.js b/node_modules/@mustafaaksoy41/sharepoint-kit/dist/chunk-VOGWZXJY.js
+index bb24dba..f536bf4 100644
+--- a/node_modules/@mustafaaksoy41/sharepoint-kit/dist/chunk-VOGWZXJY.js
++++ b/node_modules/@mustafaaksoy41/sharepoint-kit/dist/chunk-VOGWZXJY.js
+@@ -229,7 +229,10 @@ function createSpClient(config) {
+       return response.value;
+     },
+     async getColumns(options) {
+-      const url = buildGraphUrl(siteId, "contentTypes", options.contentTypeId, "columns");
++      const { contentTypeId, listId } = options;
++      const url = listId
++        ? buildGraphUrl(siteId, "lists", listId, "contentTypes", contentTypeId, "columns")
++        : buildGraphUrl(siteId, "contentTypes", contentTypeId, "columns");
+       const response = await request(url);
+       return response.value;
+     },
