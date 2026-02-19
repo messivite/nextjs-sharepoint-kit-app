@@ -1,9 +1,9 @@
-/** SharePoint Kit config – hassas değerler env'den okunur */
+// sharepoint-kit config – secrets come from env, don't put them here
 export default {
   siteId: "root",
   tenantId: process.env.SHAREPOINT_TENANT_ID ?? process.env.NEXT_PUBLIC_SHAREPOINT_TENANT_ID,
   clientId: process.env.SHAREPOINT_CLIENT_ID ?? process.env.NEXT_PUBLIC_SHAREPOINT_CLIENT_ID,
-  // clientSecret: SHAREPOINT_CLIENT_SECRET env'den otomatik okunur (config'e yazma)
+  // clientSecret is read from SHAREPOINT_CLIENT_SECRET env
 
   defaultStrategy: "first" as const,
   contentTypes: [

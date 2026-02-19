@@ -9,7 +9,7 @@ import { useSpAuth } from "@mustafaaksoy41/sharepoint-kit/components";
 import type { SpLoginConfig } from "@mustafaaksoy41/sharepoint-kit/components";
 
 const SCOPES = ["https://graph.microsoft.com/.default"];
-const REFRESH_INTERVAL_MS = 45 * 60 * 1000; // 45 dakika (token ~1 saat geçerli)
+const REFRESH_INTERVAL_MS = 45 * 60 * 1000; // token lasts ~1h, refresh before that
 
 function buildMsalConfig(config: SpLoginConfig) {
   const tenantId = (config.tenantId || "").replace(/\/$/, "");
@@ -71,13 +71,12 @@ export function TokenRefreshProvider({
         }
       } catch (err) {
         if (err instanceof InteractionRequiredAuthError) {
-          // Token yenileme başarısız, kullanıcının tekrar giriş yapması gerekebilir
-          // Sessizce devam ediyoruz; API çağrısı hata verirse kullanıcı yeniden giriş yapacak
+          // silent refresh failed – user'll have to sign in again when the next API call fails
         }
       }
     };
 
-    // İlk refresh hemen, sonra her 45 dakikada
+    // refresh now, then every 45 min
     refreshToken();
     intervalRef.current = setInterval(refreshToken, REFRESH_INTERVAL_MS);
 

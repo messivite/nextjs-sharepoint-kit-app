@@ -13,7 +13,7 @@ import {
 } from "@mustafaaksoy41/sharepoint-kit/components";
 import type { Invoice } from "../../../../generated/sp-types";
 
-// API alan adları: Fatura_x0020_Numaras_x0131_ (Fatura No), Title, Tutar, Created
+// SharePoint uses encoded field names (Fatura_x0020_Numaras_x0131_ = Fatura No)
 const invoiceColumns = [
   { key: "Title" as const, label: "Başlık" },
   { key: "Fatura_x0020_Numaras_x0131_" as const, label: "Fatura No" },
@@ -31,7 +31,7 @@ export default function FaturalarPage() {
   useEffect(() => {
     let cancelled = false;
 
-    // 1) Env'den listId, 2) "Faturalar", 3) "Belgeler" (Fatura Denemesi burada)
+    // prefer env, else look for Faturalar or Belgeler list
     const envListId = process.env.NEXT_PUBLIC_FATURALAR_LIST_ID;
 
     if (envListId) {

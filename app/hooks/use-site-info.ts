@@ -19,7 +19,7 @@ export function useSiteInfo() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>();
 
-  // Root site: GET /sites/root - bağlandığımız site (siteId="root")
+  // the site we're connected to (siteId="root")
   useEffect(() => {
     if (!token || token === "bypass-token") return;
     let cancelled = false;
@@ -42,7 +42,7 @@ export function useSiteInfo() {
     return () => { cancelled = true; };
   }, [token]);
 
-  // Tüm siteler: GET /sites - liste (örn. 2 site)
+  // all sites in the tenant
   useEffect(() => {
     let cancelled = false;
 
